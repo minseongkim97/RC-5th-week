@@ -7,7 +7,7 @@
 
 import UIKit
 
-let league: [UIImage?] = [UIImage(named: "epl"), UIImage(named: "laliga"), UIImage(named: "seriea"), UIImage(named: "bundesliga"), UIImage(named: "ligue1")]
+let league: [UIImage?] = [UIImage(named: "epl"), UIImage(named: "laliga"),  UIImage(named: "bundesliga"), UIImage(named: "seriea"), UIImage(named: "ligue1")]
 
 class SelectLeagueViewController: UIViewController {
     
@@ -43,12 +43,19 @@ extension SelectLeagueViewController: UICollectionViewDataSource {
 extension SelectLeagueViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.row)
+        guard let leagueVC = self.storyboard?.instantiateViewController(withIdentifier: "LeagueVC") as? EachLeagueViewController else { return }
+        leagueVC.modalPresentationStyle = .fullScreen
+        
+        leagueVC.team = leagueName[indexPath.row]
+        leagueVC.leagueColorNumber = indexPath.row
+       
+        self.navigationController?.pushViewController(leagueVC, animated: true)
     }
 }
 
 extension SelectLeagueViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        CGSize(width: 400, height: 200)
+        CGSize(width: 400, height: 150)
     }
 }
