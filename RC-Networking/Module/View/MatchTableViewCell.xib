@@ -21,6 +21,9 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00 : 30" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uz9-sI-v5Z">
                                 <rect key="frame" x="10" y="10" width="55" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="55" id="s5i-Gf-wtw"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -46,6 +49,7 @@
                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="9m2-E4-YJu" secondAttribute="bottom" constant="10" id="UuL-cP-Auk"/>
                             <constraint firstItem="Uz9-sI-v5Z" firstAttribute="leading" secondItem="7NV-fQ-U7n" secondAttribute="leading" constant="10" id="Z2M-U8-pcW"/>
                             <constraint firstItem="Uz9-sI-v5Z" firstAttribute="top" secondItem="7NV-fQ-U7n" secondAttribute="top" constant="10" id="kv1-Le-1rw"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Nyx-nf-4ey" secondAttribute="trailing" constant="10" id="whk-u5-5GC"/>
                             <constraint firstItem="9m2-E4-YJu" firstAttribute="top" secondItem="Nyx-nf-4ey" secondAttribute="bottom" constant="5" id="xYD-sY-izY"/>
                         </constraints>
                     </view>
@@ -58,6 +62,11 @@
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="leaguePlaceLabel" destination="9m2-E4-YJu" id="vBi-an-adT"/>
+                <outlet property="teamLabel" destination="Nyx-nf-4ey" id="50U-Ry-brH"/>
+                <outlet property="timeLabel" destination="Uz9-sI-v5Z" id="Ajk-vo-wmu"/>
+            </connections>
             <point key="canvasLocation" x="181.15942028985509" y="82.700892857142847"/>
         </tableViewCell>
     </objects>

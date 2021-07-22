@@ -70,9 +70,12 @@ class EachLeagueViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
     @IBAction func calenderBtnPressed(_ sender: UIButton) {
+        
         if calender.scope == .week {
+            calender.backgroundColor = .white
             calender.scope = .month
         } else {
+            calender.backgroundColor = .clear
             calender.scope = .week
         }
     }
@@ -89,6 +92,7 @@ extension EachLeagueViewController: FSCalendarDelegate {
         print(formatter.string(from: date))
         
         if calender.scope == .month {
+            calender.backgroundColor = .clear
             calender.scope = .week
         }
     }
