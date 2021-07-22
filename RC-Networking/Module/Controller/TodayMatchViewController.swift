@@ -13,6 +13,7 @@ let keyHeader: HTTPHeaders = ["X-Auth-Token":"0c7ba7745c1948c5b38389c2bb730ad9"]
 let matchURL = "https://api.football-data.org/v2/matches"
 
 let leagueName = ["Premier League", "Primera Division", "Bundesliga", "Serie A", "Ligue 1"]
+let leagueSymbol = ["PL", "PD", "BL1", "SA", "FL1"]
 let leagueWorld = ["🏴󠁧󠁢󠁥󠁮󠁧󠁿", "🇪🇸" ,"🇩🇪", "🇮🇹", "🇫🇷"]
 
 

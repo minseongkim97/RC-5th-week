@@ -6,14 +6,18 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 import FSCalendar
 
 class EachLeagueViewController: UIViewController {
 
     var team: String = ""
+    var leagueIndex: Int = 0
     var leagueColorNumber: Int = 0
     var leagueColor: UIColor = .black
     var formatter = DateFormatter()
+    var eachLeagueMatch = [JSON]()
     
     @IBOutlet weak var calender: FSCalendar! {
         didSet {
@@ -28,6 +32,7 @@ class EachLeagueViewController: UIViewController {
             self.matchTableView.dataSource = self
             self.matchTableView.delegate = self
             self.matchTableView.register(UINib(nibName: "ImageMatchTableViewCell", bundle: nil), forCellReuseIdentifier: "ImageMatchCell")
+            self.matchTableView.tableFooterView = UIView(frame: .zero)
         }
     }
     @IBOutlet weak var league: UILabel!
@@ -80,6 +85,32 @@ class EachLeagueViewController: UIViewController {
         }
     }
     
+    func fetchEachLeagueData(leagueIndex: Int, date: String) {
+        self.eachLeagueMatch = []
+        AF.request(matchURL, method: .get, parameters: ["competitions":leagueSymbol[leagueIndex], "dateFrom":date, "dateTo":date], headers: keyHeader
+        ).validate(statusCode: 200..<300).responseJSON { response in
+            switch response.result {
+            case .success(let value):
+
+                let json = JSON(value)
+                for match in json["matches"].arrayValue {
+                    if match["competition"]["name"] == JSON(leagueName[leagueIndex]) {
+                        self.eachLeagueMatch.append(match)
+                    }
+                }
+                DispatchQueue.main.async {
+                    self.matchTableView.reloadData()
+                }
+              
+                
+              
+
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
 }
 
 extension EachLeagueViewController: FSCalendarDataSource {
@@ -91,6 +122,11 @@ extension EachLeagueViewController: FSCalendarDelegate {
         formatter.dateFormat = "yyyy-MM-dd"
         print(formatter.string(from: date))
         
+
+        fetchEachLeagueData(leagueIndex: leagueIndex, date: formatter.string(from: date))
+        
+      
+        
         if calender.scope == .month {
             calender.backgroundColor = .clear
             calender.scope = .week
@@ -100,12 +136,21 @@ extension EachLeagueViewController: FSCalendarDelegate {
 
 extension EachLeagueViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        5
+        eachLeagueMatch.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ImageMatchCell", for: indexPath) as! ImageMatchTableViewCell
+        cell.timeLabel.text = "\(eachLeagueMatch[indexPath.row]["utcDate"].stringValue[String.Index(encodedOffset: 11)...String.Index(encodedOffset: 15)])"
+        cell.homeTeamLabel.text = "\(eachLeagueMatch[indexPath.row]["homeTeam"]["name"])"
+        cell.awayTeamLabel.text = "\(eachLeagueMatch[indexPath.row]["awayTeam"]["name"])"
+        cell.roundLabel.text = "\(eachLeagueMatch[indexPath.row]["matchday"])R"
+        cell.homeTeamScoreLabel.text = "\(eachLeagueMatch[indexPath.row]["score"]["fullTime"]["homeTeam"])"
         
+        cell.awayTeamScoreLabel.text = "\(eachLeagueMatch[indexPath.row]["score"]["fullTime"]["awayTeam"])"
+        
+        
+     
         return cell
     }
     
