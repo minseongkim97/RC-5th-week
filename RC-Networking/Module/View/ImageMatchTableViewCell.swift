@@ -9,6 +9,7 @@ import UIKit
 
 class ImageMatchTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var awayTeamImage: UIImageView!
     @IBOutlet weak var homeTeamImage: UIImageView!
     @IBOutlet weak var awayTeamLabel: UILabel! {
@@ -37,5 +38,8 @@ class ImageMatchTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
+    override func prepareForReuse() {
+        statusLabel.backgroundColor = .white
+        statusLabel.textColor = .label
+    }
 }

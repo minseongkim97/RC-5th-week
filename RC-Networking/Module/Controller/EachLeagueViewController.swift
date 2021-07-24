@@ -9,6 +9,7 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import FSCalendar
+import Kingfisher
 
 class EachLeagueViewController: UIViewController {
 
@@ -19,11 +20,13 @@ class EachLeagueViewController: UIViewController {
     var formatter = DateFormatter()
     var eachLeagueMatch = [JSON]()
     
-    @IBOutlet weak var calender: FSCalendar! {
+    @IBOutlet weak var calendar: FSCalendar! {
         didSet {
-            self.calender.delegate = self
-            self.calender.dataSource = self
-            self.calender.backgroundColor = .clear
+            self.calendar.delegate = self
+            self.calendar.dataSource = self
+            self.calendar.backgroundColor = .clear
+            self.calendar.locale = Locale(identifier: "ko_KR")
+            
         }
     }
     
@@ -40,6 +43,12 @@ class EachLeagueViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        formatter.dateFormat = "yyyy-MM-dd"
+        print(formatter.string(from: Date()))
+        
+
+        fetchEachLeagueData(leagueIndex: leagueIndex, date: formatter.string(from: Date()))
         
         league.text = team
         switch leagueColorNumber {
@@ -59,15 +68,15 @@ class EachLeagueViewController: UIViewController {
         
         leagueColorView.backgroundColor = leagueColor
         
-        calender.scope = .week
-        calender.appearance.titleFont = UIFont.systemFont(ofSize: 17.0)
-        calender.appearance.headerTitleFont = UIFont.boldSystemFont(ofSize: 18.0)
-        calender.appearance.weekdayFont = UIFont.boldSystemFont(ofSize: 16.0)
+        calendar.scope = .week
+        calendar.appearance.titleFont = UIFont.systemFont(ofSize: 17.0)
+        calendar.appearance.headerTitleFont = UIFont.boldSystemFont(ofSize: 18.0)
+        calendar.appearance.weekdayFont = UIFont.boldSystemFont(ofSize: 16.0)
         
-        calender.appearance.headerTitleColor = .black
-        calender.appearance.weekdayTextColor = .black
-        calender.appearance.todayColor = .red
-        calender.appearance.selectionColor = leagueColor
+        calendar.appearance.headerTitleColor = .black
+        calendar.appearance.weekdayTextColor = .black
+        calendar.appearance.todayColor = .red
+        calendar.appearance.selectionColor = leagueColor
         
     }
     
@@ -76,12 +85,12 @@ class EachLeagueViewController: UIViewController {
     }
     @IBAction func calenderBtnPressed(_ sender: UIButton) {
         
-        if calender.scope == .week {
-            calender.backgroundColor = .white
-            calender.scope = .month
+        if calendar.scope == .week {
+            calendar.backgroundColor = .systemGroupedBackground
+            calendar.scope = .month
         } else {
-            calender.backgroundColor = .clear
-            calender.scope = .week
+            calendar.backgroundColor = .clear
+            calendar.scope = .week
         }
     }
     
@@ -114,6 +123,9 @@ class EachLeagueViewController: UIViewController {
 }
 
 extension EachLeagueViewController: FSCalendarDataSource {
+    func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
+        
+    }
     
 }
 
@@ -127,9 +139,9 @@ extension EachLeagueViewController: FSCalendarDelegate {
         
       
         
-        if calender.scope == .month {
-            calender.backgroundColor = .clear
-            calender.scope = .week
+        if calendar.scope == .month {
+            calendar.backgroundColor = .clear
+            calendar.scope = .week
         }
     }
 }
@@ -141,15 +153,32 @@ extension EachLeagueViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ImageMatchCell", for: indexPath) as! ImageMatchTableViewCell
-        cell.timeLabel.text = "\(eachLeagueMatch[indexPath.row]["utcDate"].stringValue[String.Index(encodedOffset: 11)...String.Index(encodedOffset: 15)])"
+        
+        if eachLeagueMatch[indexPath.row]["status"] == "SCHEDULED" {
+            cell.statusLabel.text = "예정"
+        } else {
+            cell.statusLabel.backgroundColor = .red
+            cell.statusLabel.textColor = .white
+            cell.statusLabel.text = "종료"
+        }
+        cell.timeLabel.text = "\(eachLeagueMatch[indexPath.row]["utcDate"].stringValue[String.Index(utf16Offset: 11, in: eachLeagueMatch[indexPath.row]["utcDate"].stringValue)...String.Index(utf16Offset: 15, in: eachLeagueMatch[indexPath.row]["utcDate"].stringValue)])"
         cell.homeTeamLabel.text = "\(eachLeagueMatch[indexPath.row]["homeTeam"]["name"])"
         cell.awayTeamLabel.text = "\(eachLeagueMatch[indexPath.row]["awayTeam"]["name"])"
         cell.roundLabel.text = "\(eachLeagueMatch[indexPath.row]["matchday"])R"
-        cell.homeTeamScoreLabel.text = "\(eachLeagueMatch[indexPath.row]["score"]["fullTime"]["homeTeam"])"
         
-        cell.awayTeamScoreLabel.text = "\(eachLeagueMatch[indexPath.row]["score"]["fullTime"]["awayTeam"])"
+        if "\(eachLeagueMatch[indexPath.row]["score"]["fullTime"]["homeTeam"])" == "null" {
+            cell.homeTeamScoreLabel.text = "0"
+        } else {
+            cell.homeTeamScoreLabel.text = "\(eachLeagueMatch[indexPath.row]["score"]["fullTime"]["homeTeam"])"
+        }
         
-        
+        if "\(eachLeagueMatch[indexPath.row]["score"]["fullTime"]["awayTeam"])" == "null" {
+            cell.awayTeamScoreLabel.text = "0"
+        } else {
+            cell.awayTeamScoreLabel.text = "\(eachLeagueMatch[indexPath.row]["score"]["fullTime"]["awayTeam"])"
+        }
+        cell.homeTeamImage.image = UIImage(named: "\(eachLeagueMatch[indexPath.row]["homeTeam"]["name"])")
+        cell.awayTeamImage.image = UIImage(named: "\(eachLeagueMatch[indexPath.row]["awayTeam"]["name"])")
      
         return cell
     }
@@ -158,5 +187,8 @@ extension EachLeagueViewController: UITableViewDataSource {
 }
 
 extension EachLeagueViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        print(indexPath)
+    }
 }
