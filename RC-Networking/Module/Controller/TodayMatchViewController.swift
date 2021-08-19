@@ -51,7 +51,10 @@ class TodayMatchViewController: UIViewController {
     
     func fetchTodayData() {
         FTeam = []
-        AF.request(matchURL, method: .get, parameters: ["dateFrom":"2021-10-16", "dateTo":"2021-10-18"], headers: keyHeader
+        var formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        print(formatter.string(from: Date()))
+        AF.request(matchURL, method: .get, parameters: ["dateFrom":formatter.string(from: Date()), "dateTo":formatter.string(from: Date())], headers: keyHeader
         ).validate(statusCode: 200..<300)
 //        .responseDecodable(of: <#T##Decodable.Protocol#>, queue: <#T##DispatchQueue#>, dataPreprocessor: <#T##DataPreprocessor#>, decoder: <#T##DataDecoder#>, emptyResponseCodes: <#T##Set<Int>#>, emptyRequestMethods: <#T##Set<HTTPMethod>#>, completionHandler: <#T##(DataResponse<Decodable, AFError>) -> Void#>)
         .responseJSON { response in
