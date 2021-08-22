@@ -1,4 +1,4 @@
-# Football Calander
+# Football Calendar
 ## 해외축구 4대리그 일정앱 프로젝트
 
 Alamofire, FSCalendar, Kingfisher 라이브러리 사용
@@ -14,3 +14,5 @@ Alamofire, FSCalendar, Kingfisher 라이브러리 사용
 네번째 화면: 각 리그에 맞는 일정 월별 표시 & 지나간 일정은 결과 스코어 표시 
 
 다섯번째 화면: 내 정보(이름, 응원팀), 해외축구 뉴스
+
+[![Video Label](https://www.youtube.com/vi/13Jeq0yr_8A/0.jpg)](https://www.youtube.com/watch?v=13Jeq0yr_8A)
