@@ -15,4 +15,6 @@ Alamofire, FSCalendar, Kingfisher 라이브러리 사용
 
 다섯번째 화면: 내 정보(이름, 응원팀), 해외축구 뉴스
 
-[![Video Label](https://www.youtube.com/vi/13Jeq0yr_8A/0.jpg)](https://www.youtube.com/watch?v=13Jeq0yr_8A)
+[![Video Label](http://img.youtube.com/vi/13Jeq0yr_8A/0.jpg)](https://youtu.be/13Jeq0yr_8A?t=0s)
+
+
